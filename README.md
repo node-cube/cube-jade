@@ -2,6 +2,11 @@
 
   npm install cube-jade
 
+## this module need runtime
+
+copy `runtime.js` to you project
+
+
 ## write a processor
 
 ```js
