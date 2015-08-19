@@ -33,8 +33,9 @@ JadeProcessor.prototype = {
       return callback(e);
     }
 
+    code = resFun.toString();
+
     if (options.compress) {
-      code = resFun.toString();
       code = ug.minify(code, {fromString: true}).code;
     }
 
