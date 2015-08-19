@@ -22,19 +22,22 @@ JadeProcessor.prototype = {
     var flagHtml = false;
     if (/\.html$/.test(options.qpath)) {
       flagHtml = true;
+      options.compress = false;
     }
     code = fs.readFileSync(fpath, 'utf8').toString();
     res.source = code;
     try {
-      resFun = jade.compile(code, {filename: fpath});
-      code = resFun.toString();
+      resFun = (flagHtml ? jade.compile : jade.compileClient)(code, {filename: fpath});
     } catch (e) {
       e.message += '\n file:' + file;
       return callback(e);
     }
+
     if (options.compress) {
+      code = resFun.toString();
       code = ug.minify(code, {fromString: true}).code;
     }
+
     if (options.moduleWrap) {
       var wraped = 'var jade = require("jade_runtime");' + code +
          ';module.exports = template;';
