@@ -2,7 +2,7 @@
   "author": "fish <zhengxinlin@gmail.com> (https://github.com/fishbar)",
   "name": "cube-jade",
   "description": "the jade template processor for cube",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "homepage": "https://github.com/node-cube/cube-jade",
   "repository": {
     "type": "git",
@@ -16,9 +16,9 @@
     "node": ">=0.8.0"
   },
   "dependencies": {
-    "uglify-js": "2.4.15",
-    "jade": "1.7.x",
-    "debug": "1.0.3"
+    "debug": "1.0.3",
+    "jade": "~1.11.0",
+    "uglify-js": "2.4.15"
   },
   "devDependencies": {
     "jscoverage": "0.5.x",
