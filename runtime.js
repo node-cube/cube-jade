@@ -6,7 +6,7 @@
  */
 
 
-Cube.register('jade_runtime', (function () {
+Cube.register('jade-runtime', (function () {
   var exports = {};
   /**
    * following code is copy from jade runtime.js

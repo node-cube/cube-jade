@@ -2,7 +2,7 @@
   "author": "fish <zhengxinlin@gmail.com> (https://github.com/fishbar)",
   "name": "cube-jade",
   "description": "the jade template processor for cube",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "homepage": "https://github.com/node-cube/cube-jade",
   "repository": {
     "type": "git",

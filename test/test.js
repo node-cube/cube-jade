@@ -8,7 +8,7 @@ describe('cube-jade', function () {
   });
   it ('expect processor jade file fine', function (done) {
     require = function (mod) {
-      if (mod === 'jade_runtime') {
+      if (mod === 'jade-runtime') {
         return {
           escape: function (str) {
             return str;
@@ -48,7 +48,7 @@ describe('cube-jade', function () {
 
   it ('expect processor jade file fine without compress', function (done) {
     require = function (mod) {
-      if (mod === 'jade_runtime') {
+      if (mod === 'jade-runtime') {
         return {
           escape: function (str) {
             return str;
@@ -106,6 +106,7 @@ describe('cube-jade', function () {
     var processor = new TestMod(cube);
     processor.process('/test_err.jade', options, function (err, res) {
       expect(err).to.be.ok();
+      expect(err.code).to.be('Jade_Parse_Error');
       done();
     });
   });
