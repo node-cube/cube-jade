@@ -41,7 +41,7 @@ JadeProcessor.prototype = {
     }
 
     if (options.moduleWrap) {
-      var wraped = 'var jade = require("jade-runtime");' + code +
+      var wraped = 'var jade = require("jade_runtime");' + code +
          ';module.exports = template;';
       res.wraped = this.cube.wrapTemplate(options.qpath, wraped, ['jade_runtime']);
     }
