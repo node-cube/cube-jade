@@ -1,14 +1,16 @@
 var TestMod = require('../index');
 var expect = require('expect.js');
+var fs = require('fs');
+var path = require('path');
 
 describe('cube-jade', function () {
   it('expect info', function () {
-    expect(TestMod.info.type).to.be('template');
-    expect(TestMod.info.ext).to.be('.jade');
+    expect(TestMod.type).to.be('template');
+    expect(TestMod.ext).to.be('.jade');
   });
-  it ('expect processor jade file fine', function (done) {
+  it('expect processor jade file fine', function (done) {
     require = function (mod) {
-      if (mod === 'jade-runtime') {
+      if (mod === 'jade_runtime') {
         return {
           escape: function (str) {
             return str;
@@ -17,15 +19,20 @@ describe('cube-jade', function () {
       }
       return {};
     };
-    var options = {
-      release: false,
-      moduleWrap: true,
-      compress: true,
-      qpath: '/test.jade',
-      root: __dirname
+    var file = '/test.jade';
+    var source = fs.readFileSync(path.join(__dirname, file)).toString();
+    var data = {
+      realPath: '/test.jade',
+      code: source,
+      source: source
     };
     var cube = {
-      config: options,
+      config: {
+        release: false,
+        moduleWrap: true,
+        compress: true,
+        root: __dirname
+      },
       wrapTemplate: function (file, code, require) {
         return 'Cube("' + file + '",' + JSON.stringify(require) + ',function(module){' + code + ';return module.exports});';
       }
@@ -38,34 +45,30 @@ describe('cube-jade', function () {
       done();
     }
     var processor = new TestMod(cube);
-    processor.process('/test.jade', options, function (err, res) {
+    processor.process(data, function (err, res) {
       expect(err).to.be(null);
-      expect(res).have.keys(['source', 'code', 'wraped']);
+      expect(res).have.keys(['source', 'code']);
       expect(res.source).match(/#\{name\}/);
-      eval(res.wraped);
+      var code = cube.wrapTemplate(file, res.code, ['jade_runtime']);
+      eval(code);
     });
   });
 
   it ('expect processor jade file fine without compress', function (done) {
-    require = function (mod) {
-      if (mod === 'jade-runtime') {
-        return {
-          escape: function (str) {
-            return str;
-          }
-        };
-      }
-      return {};
-    };
-    var options = {
-      release: false,
-      moduleWrap: true,
-      compress: false,
-      qpath: '/test.jade',
-      root: __dirname
+    var file = '/test.jade';
+    var source = fs.readFileSync(path.join(__dirname, file)).toString();
+    var data = {
+      realPath: '/test.jade',
+      code: source,
+      source: source
     };
     var cube = {
-      config: options,
+      config: {
+        release: false,
+        moduleWrap: true,
+        compress: true,
+        root: __dirname
+      },
       wrapTemplate: function (file, code, require) {
         return 'Cube("' + file + '",' + JSON.stringify(require) + ',function(module){' + code + ';return module.exports});';
       }
@@ -78,33 +81,36 @@ describe('cube-jade', function () {
       done();
     }
     var processor = new TestMod(cube);
-    processor.process('/test.jade', options, function (err, res) {
+    processor.process(data, function (err, res) {
       expect(err).to.be(null);
-      expect(res).have.keys(['source', 'code', 'wraped']);
+      expect(res).have.keys(['source', 'code']);
       expect(res.source).match(/#\{name\}/);
-      eval(res.wraped);
+      var code = cube.wrapTemplate(file, res.code, ['jade_runtime']);
+      eval(code);
     });
   });
 
   it ('expect processor error jade file, return error', function (done) {
-    require = function () {
-      return {};
-    };
-    var options = {
-      release: false,
-      moduleWrap: true,
-      compress: true,
-      qpath: '/test_err.jade',
-      root: __dirname
+    var file = '/test_err.jade'
+    var source = fs.readFileSync(path.join(__dirname, file)).toString();
+    var data = {
+      realPath: file,
+      code: source,
+      source: source
     };
     var cube = {
-      config: options,
+      config: {
+        release: false,
+        moduleWrap: true,
+        compress: true,
+        root: __dirname
+      },
       wrapTemplate: function (file, code, require) {
         return 'Cube("' + file + '",' + JSON.stringify(require) + ',function(module){' + code + ';return module.exports});';
       }
     };
     var processor = new TestMod(cube);
-    processor.process('/test_err.jade', options, function (err, res) {
+    processor.process(data, function (err, res) {
       expect(err).to.be.ok();
       expect(err.code).to.be('Jade_Parse_Error');
       done();

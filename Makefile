@@ -1,11 +1,14 @@
 install:
 	@npm install .
 
-publish: release
+publish-runtime:
+	@cd ./runtime && npm publish
+
+publish: publish-runtime
 	@npm publish
 
 test:
 	@npm test
 
 .PHONY: \
-	install publish test
+	install publish publish-runtime test
