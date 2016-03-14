@@ -14,13 +14,8 @@ JadeProcessor.prototype.process = function (data, callback) {
   var code = data.code;
   var file = data.realPath;
   var resFun;
-  var flagHtml = false;
-  if (/\.html$/.test(data.queryPath)) {
-    flagHtml = true;
-    data.compress = false;
-  }
   try {
-    resFun = (flagHtml ? jade.compile : jade.compileClient)(code, {filename: file});
+    resFun = jade.compileClient(code, {filename: file});
   } catch (e) {
     e.code = 'Jade_Parse_Error';
     e.file = file;
@@ -30,9 +25,8 @@ JadeProcessor.prototype.process = function (data, callback) {
   }
 
   code = resFun.toString();
-
   data.code = 'var jade = require("jade_runtime");\n' + code +
-       '\nmodule.exports = template;\n';
+         '\nmodule.exports = template;\n';
   callback(null, data);
 };
 
